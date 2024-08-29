@@ -10,7 +10,7 @@ class Contact(db.Model):
     man = db.Column(db.Integer)
     ngot = db.Column(db.Integer)
     cay = db.Column(db.Integer)
-    A = db.Column(db.String(120))
+    #A = db.Column(db.String(120))
     favorite_food = db.Column(db.String(120))
     # diung = db.Column(db.Integer,unique = False,nullable = True)
     def to_json(self):
@@ -22,7 +22,7 @@ class Contact(db.Model):
             "ngot":self.ngot,
             "password":self.password,
             "cay": self.cay,
-            "A":self.A,
+            #"A":self.A,
             "favorite_food":self.favorite_food,
             "check":self.check
             # "diung":self.diung,

@@ -138,16 +138,17 @@ def create_contact():
         if not username or not password or not email:
             return jsonify({"message": "You must include a username and email"}), 400
 
-        new_contact = Contact(username=username, man=man, ngot=ngot, cay=cay, email=email, password=password, check=0)
+        new_contact = Contact(username=username,man=man,ngot = ngot,cay = cay,email = email,password = password,check = 0)
         
         db.session.add(new_contact)
         db.session.commit()
         
-        xuly()  # Call xuly to update favorite food
+        xuly()
         return jsonify({"message": "User created!"}), 201
     except Exception as e:
         print("Error:", str(e))  # Debug print
         return jsonify({"message": "An error occurred while creating the user.", "error": str(e)}), 400
+
 
 @app.route("/create_food", methods=["POST"])
 def create_food():
