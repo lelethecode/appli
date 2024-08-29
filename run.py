@@ -1,5 +1,5 @@
 import os
-from backend.config import app,create_app
+from config import app,create_app
 
 from flask import Flask
 app = Flask(__name__)
