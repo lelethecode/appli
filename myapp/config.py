@@ -6,7 +6,7 @@ from flask_cors import CORS
 from sqlalchemy.sql import func
 class Config:
     """Base configuration."""
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'lelethecoder')
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'lelethecoder ')
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'postgresql://postgres:lele9920483@localhost:5432/model')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
