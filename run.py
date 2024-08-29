@@ -1,2 +1,4 @@
-from myapp import create_app
-app = create_app()
+from myapp.config import app
+
+if __name__ == "__main__":
+    app.run(debug=True)  # Set debug to False in production

@@ -19,7 +19,7 @@ from sqlalchemy.orm import Mapped,mapped_column
     
 @app.route("/")
 def home():
-    return render_template("base.html")
+    return(f"hello")
 
 # @app.route("/<name>")
 # def user(name):
