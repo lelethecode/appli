@@ -1,6 +1,7 @@
 from config import db
 
 class Contact(db.Model):
+    __tablename__ = 'Contact'  # Make sure the table name is correct
     id = db.Column(db.Integer, primary_key=True)
     check = db.Column(db.Integer)
     username = db.Column(db.String(80), unique=True, nullable=False)
