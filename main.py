@@ -118,7 +118,7 @@ def reset_food():
 def get_contacts():
     try:
         contacts = Contact.query.all()
-        json_contacts = [contact.to_json() for contact in contacts]
+        json_contacts = [f"<li>{contact.username}</li>" for contact in contacts]
         return jsonify({"contacts": json_contacts})
     except Exception as e:
         return jsonify({"message": "An error occurred while fetching contacts.", "error": str(e)}), 500
