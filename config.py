@@ -1,28 +1,24 @@
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
+from flask_migrate import Migrate
 
+# Initialize the database and migration objects
 db = SQLAlchemy()
-
-class Config:
-    """Base configuration."""
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'lelethecoder')
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'postgresql://postgres:lele9920483@localhost:5432/model')
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+migrate = Migrate()
 
 def create_app():
-    app = Flask(__name__, template_folder="frontend")
-    app.config.from_object(Config)
+    app = Flask(__name__)
 
-    # Initialize CORS
-    CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+    # Configuration settings
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://leledatabase_user:lele9920483@dpg-cr811g3tq21c739hlq40-a/leledatabase')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.secret_key = os.getenv('SECRET_KEY', 'lelethecoder')  # Set your secret key
 
-    # Initialize SQLAlchemy
+    # Initialize extensions
     db.init_app(app)
+    migrate.init_app(app, db)
 
-    with app.app_context():
-        # Ensure the tables are created if they don't exist
-        db.create_all()
+    # Register your blueprints or routes here if you have any
 
     return app

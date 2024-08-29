@@ -1,3 +1,4 @@
+import os
 from flask import Flask, redirect, url_for, render_template, request, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -6,48 +7,54 @@ from sqlalchemy import text
 from model import Contact
 from model2 import Contact2
 from datetime import timedelta
-from config import create_app, db  # Import the create_app function
+from config import create_app, db  # Ensure this imports correctly
+from flask_migrate import Migrate
 
-app = create_app()  # Create the app instance
+# db = SQLAlchemy()
+# migrate = Migrate()
+# app = Flask(__name__)
+
+# # Configuration settings
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://leledatabase_user:lele9920483@dpg-cr811g3tq21c739hlq40-a/leledatabase')
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# #app.secret_key = os.getenv('SECRET_KEY', 'lelethecoder')  # Set your secret key
+
+# # Initialize extensions
+# db.init_app(app)
+# migrate.init_app(app, db)  # Create the app instance
+app = create_app()
 
 @app.route("/")
 def home():
-    return "hello"
+    return "Hello"
 
 # Define the xuly function
 def xuly():
     try:
-        # Fetch all users
         contacts = Contact.query.all()
         print(f"Total contacts found: {len(contacts)}")
 
         for contact in contacts:
-            # Initialize variables to track the minimum score
             if contact.check == 0:
                 min_score = float('inf')
                 best_food = None
 
-                # Fetch all food items
                 foods = Contact2.query.all()
                 print(f"Total foods found: {len(foods)}")
 
                 for food in foods:
-                    # Calculate the score (lower is better)
                     score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
                     print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
 
-                    # If this food has a lower score, update the minimum score variables
                     if score < min_score:
                         min_score = score
                         best_food = food.username
                         print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
 
-                # Update the user's favorite food with the food having the minimum score
                 if best_food:
                     contact.favorite_food = best_food
                     print(f"Updated contact {contact.username} with favorite food {best_food}")
 
-        # Save the results to the database
         db.session.commit()
         print("All contacts updated successfully.")
 
@@ -136,7 +143,7 @@ def create_contact():
         db.session.add(new_contact)
         db.session.commit()
         
-        xuly()
+        xuly()  # Call xuly to update favorite food
         return jsonify({"message": "User created!"}), 201
     except Exception as e:
         print("Error:", str(e))  # Debug print
@@ -238,5 +245,6 @@ def logout():
     return redirect(url_for("login"))
 
 if __name__ == "__main__":
-    schedule_tasks()  # Start scheduled tasks
-    app.run(debug=True, host="0.0.0.0")  # Start the Flask application
+    #schedule_tasks()  # Start scheduled tasks
+    app.run(debug=True)  # Start the Flask application
+    app.run(host = "0.0.0.0")
