@@ -12,10 +12,9 @@ def create_app():
     CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
     # Configuration settings
     #app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydatatbase.db"
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://leledatabase_user:gllglkTmoT3sZmkWp1HzboT2AsYXeW5a@dpg-cr811g3tq21c739hlq40-a.oregon-postgres.render.com/leledatabase')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'postgresql://leledatabase_user:gllglkTmoT3sZmkWp1HzboT2AsYXeW5a@dpg-cr811g3tq21c739hlq40-a.oregon-postgres.render.com/leledatabase'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.secret_key = os.getenv('SECRET_KEY', 'lelethecoder')  # Set your secret key
-
     # Initialize extensions
     cors = CORS(app, resources={r"http://localhost:5173/": {"origins": "*"}})
     db.init_app(app)
