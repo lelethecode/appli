@@ -1,5 +1,5 @@
 import os
-from flask import Flask 
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
@@ -20,5 +20,9 @@ def create_app():
 
     # Initialize SQLAlchemy
     db.init_app(app)
+
+    with app.app_context():
+        # Ensure the tables are created if they don't exist
+        db.create_all()
 
     return app
