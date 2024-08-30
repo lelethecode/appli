@@ -8,7 +8,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 
 def create_app():
-    app = Flask(__name__, static_folder="frontend/build", template_folder="frontend/build")
+    app = Flask(__name__, static_folder="frontend/build", template_folder="frontend")
     CORS(app, resources={r"/*": {"origins": "https://lelefrontend.onrender.com"}})
     # Configuration settings
     #app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydatatbase.db"
