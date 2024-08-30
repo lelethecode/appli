@@ -36,25 +36,25 @@ def xuly():
         print(f"Total contacts found: {len(contacts)}")
 
         for contact in contacts:
-            
-            min_score = float('inf')
-            best_food = None
+            if contact.check == False:
+                min_score = float('inf')
+                best_food = None
 
-            foods = Contact2.query.all()
-            print(f"Total foods found: {len(foods)}")
+                foods = Contact2.query.all()
+                print(f"Total foods found: {len(foods)}")
 
-            for food in foods:
-                score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
-                print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
+                for food in foods:
+                    score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
+                    print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
 
-                if score < min_score:
-                    min_score = score
-                    best_food = food.username
-                    print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
+                    if score < min_score:
+                        min_score = score
+                        best_food = food.username
+                        print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
 
-            if best_food:
-                contact.favorite_food = best_food
-                print(f"Updated contact {contact.username} with favorite food {best_food}")
+                if best_food:
+                    contact.favorite_food = best_food
+                    print(f"Updated contact {contact.username} with favorite food {best_food}")
 
         db.session.commit()
         print("All contacts updated successfully.")
@@ -149,7 +149,8 @@ def create_contact():
         man=data['man'],
         ngot=data['ngot'],
         cay=data['cay'],
-        favorite_food=data.get('favorite_food')  # Optional field
+        favorite_food=data.get('favorite_food'),  # Optional field
+        check = False
     )
 
     # Save to the database
