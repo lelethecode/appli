@@ -1,4 +1,5 @@
 import os
+from sqlite3 import IntegrityError
 from flask import Flask, redirect, url_for, render_template, request, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -26,7 +27,7 @@ app = create_app()
 
 @app.route("/")
 def home():
-    return "Hello"
+    return render_template("base.html")
 
 # Define the xuly function
 def xuly():
@@ -123,33 +124,44 @@ def get_contacts():
     except Exception as e:
         return jsonify({"message": "An error occurred while fetching contacts.", "error": str(e)}), 500
 
-@app.route("/create_contact", methods=["POST"])
+@app.route('/create_contact', methods=['POST'])
 def create_contact():
-    try:
-        data = request.json
-        print("Received data:", data)  # Debug print
-        
-        username = data.get("username")
-        password = data.get("password")
-        email = data.get("email")
-        man = data.get("man")
-        ngot = data.get("ngot")
-        cay = data.get("cay")
-        if not username or not password or not email:
-            return jsonify({"message": "You must include a username and email"}), 400
+    data = request.get_json()
 
-        new_contact = Contact(username=username,man=man,ngot = ngot,cay = cay,email = email,password = password,check = 0)
-        
+    # Validate required fields
+    required_fields = ['username', 'password', 'email', 'man', 'ngot', 'cay']
+    for field in required_fields:
+        if field not in data or not data[field]:
+            return jsonify({"error": f"{field} is required."}), 400
+
+    # Validate 'man', 'ngot', 'cay' are integers between 1 and 3
+    for field in ['man', 'ngot', 'cay']:
+        if not isinstance(data[field], int) or not (1 <= data[field] <= 3):
+            return jsonify({"error": f"{field} must be an integer between 1 and 3."}), 400
+
+    # Create a new contact instance
+    new_contact = Contact(
+        username=data['username'],
+        password=data['password'],
+        email=data['email'],
+        man=data['man'],
+        ngot=data['ngot'],
+        cay=data['cay'],
+        favorite_food=data.get('favorite_food')  # Optional field
+    )
+
+    # Save to the database
+    try:
         db.session.add(new_contact)
         db.session.commit()
-        
-        xuly()
-        return jsonify({"message": "User created!"}), 201
+        return jsonify({"message": "Contact created successfully."}), 201
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify({"error": "Username or email already exists."}), 400
     except Exception as e:
-        print("Error:", str(e))  # Debug print
-        return jsonify({"message": "An error occurred while creating the user.", "error": str(e)}), 400
-
-
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+    
 @app.route("/create_food", methods=["POST"])
 def create_food():
     try:
