@@ -89,7 +89,8 @@ def favorite_foods():
             favorite_foods_list.append({
                 "user_id": contact.id,
                 "username": contact.username,
-                "favorite_food": favorite_food
+                "favorite_food": favorite_food,
+                "check":contact.check
             })
 
         return jsonify({"contacts": favorite_foods_list})
