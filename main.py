@@ -162,28 +162,30 @@ def create_contact():
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
     
-@app.route("/create_food", methods=["POST"])
+@app.route('/create_food', methods=['POST'])
 def create_food():
     try:
-        data = request.json
-        print("Received data:", data)  # Debug print
-        
-        username = data.get("username")
-        man = data.get("man")
-        ngot = data.get("ngot")
-        cay = data.get("cay")
-        if not username:
-            return jsonify({"message": "You must include a username"}), 400
+        data = request.json  # Lấy dữ liệu JSON từ yêu cầu
+        if not data:
+            return jsonify({"error": "No input data provided"}), 400
 
-        new_food = Contact2(username=username, man=man, ngot=ngot, cay=cay, check=0)
-        
-        db.session.add(new_food)
+        username = data.get('username')
+        man = data.get('man')
+        ngot = data.get('ngot')
+        cay = data.get('cay')
+
+        if not all([username, man, ngot, cay]):
+            return jsonify({"error": "Missing data fields"}), 400
+
+        # Thêm dữ liệu vào cơ sở dữ liệu
+        new_contact = Contact2(username=username, man=man, ngot=ngot, cay=cay)
+        db.session.add(new_contact)
         db.session.commit()
-        
-        return jsonify({"message": "Food created!"}), 201
+
+        return jsonify({"message": "Food preferences created successfully"}), 201
+
     except Exception as e:
-        print("Error:", str(e))  # Debug print
-        return jsonify({"message": "An error occurred while creating the food.", "error": str(e)}), 400
+        return jsonify({"error": str(e)}), 500
 
 @app.route("/update_contact/<int:user_id>", methods=["PATCH"])
 def update_contact(user_id):
