@@ -259,5 +259,4 @@ def logout():
 
 if __name__ == "__main__":
     #schedule_tasks()  # Start scheduled tasks
-    app.run(debug=True)  # Start the Flask application
-    app.run(host = "0.0.0.0")
+   app.run(host="0.0.0.0", port=5000, debug=True)
