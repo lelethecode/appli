@@ -10,7 +10,7 @@ from model2 import Contact2
 from datetime import timedelta
 from config import create_app, db  # Ensure this imports correctly
 from flask_migrate import Migrate
-
+from flask_cors import CORS, cross_origin
 # db = SQLAlchemy()
 # migrate = Migrate()
 # app = Flask(__name__)
@@ -125,6 +125,7 @@ def get_contacts():
         return jsonify({"message": "An error occurred while fetching contacts.", "error": str(e)}), 500
 
 @app.route('/create_contact', methods=['POST'])
+@cross_origin()  # Kích hoạt CORS cho route này
 def create_contact():
     data = request.get_json()
 
@@ -162,30 +163,29 @@ def create_contact():
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
     
-@app.route('/create_food', methods=['POST'])
+@app.route("/create_food", methods=["POST"])
+@cross_origin()  # Kích hoạt CORS cho route này
 def create_food():
     try:
-        data = request.json  # Lấy dữ liệu JSON từ yêu cầu
-        if not data:
-            return jsonify({"error": "No input data provided"}), 400
+        data = request.json
+        print("Received data:", data)  # Debug print
+        
+        username = data.get("username")
+        man = data.get("man")
+        ngot = data.get("ngot")
+        cay = data.get("cay")
+        if not username:
+            return jsonify({"message": "You must include a username"}), 400
 
-        username = data.get('username')
-        man = data.get('man')
-        ngot = data.get('ngot')
-        cay = data.get('cay')
-
-        if not all([username, man, ngot, cay]):
-            return jsonify({"error": "Missing data fields"}), 400
-
-        # Thêm dữ liệu vào cơ sở dữ liệu
-        new_contact = Contact2(username=username, man=man, ngot=ngot, cay=cay)
-        db.session.add(new_contact)
+        new_food = Contact2(username=username, man=man, ngot=ngot, cay=cay, check=0)
+        
+        db.session.add(new_food)
         db.session.commit()
-
-        return jsonify({"message": "Food preferences created successfully"}), 201
-
+        
+        return jsonify({"message": "Food created!"}), 201
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print("Error:", str(e))  # Debug print
+        return jsonify({"message": "An error occurred while creating the food.", "error": str(e)}), 400
 
 @app.route("/update_contact/<int:user_id>", methods=["PATCH"])
 def update_contact(user_id):
@@ -261,4 +261,4 @@ def logout():
 
 if __name__ == "__main__":
     #schedule_tasks()  # Start scheduled tasks
-   app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
