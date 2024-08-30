@@ -156,6 +156,7 @@ def create_contact():
     try:
         db.session.add(new_contact)
         db.session.commit()
+        xuly()
         return jsonify({"message": "Contact created successfully."}), 201
     except IntegrityError:
         db.session.rollback()
