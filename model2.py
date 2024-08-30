@@ -15,6 +15,6 @@ class Contact2(db.Model):
             "ngot":self.ngot,
             "cay":self.cay,
             "username":self.username,
-            
+            "check":self.check,
             # "diung":self.diung,
         }
