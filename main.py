@@ -166,26 +166,32 @@ def create_contact():
 @app.route("/create_food", methods=["POST"])
 @cross_origin()  # Kích hoạt CORS cho route này
 def create_food():
-    try:
-        data = request.json
-        print("Received data:", data)  # Debug print
-        
-        username = data.get("username")
-        man = data.get("man")
-        ngot = data.get("ngot")
-        cay = data.get("cay")
-        if not username:
-            return jsonify({"message": "You must include a username"}), 400
+    data = request.json
 
-        new_food = Contact2(username=username, man=man, ngot=ngot, cay=cay, check=0)
-        
-        db.session.add(new_food)
-        db.session.commit()
-        
-        return jsonify({"message": "Food created!"}), 201
-    except Exception as e:
-        print("Error:", str(e))  # Debug print
-        return jsonify({"message": "An error occurred while creating the food.", "error": str(e)}), 400
+    username = data.get('username')
+    man = data.get('man')
+    ngot = data.get('ngot')
+    cay = data.get('cay')
+    check = data.get('check', False)  # Giá trị mặc định là False nếu không có trong yêu cầu
+
+    # Chuyển đổi giá trị check từ 0/1 sang True/False
+    if isinstance(check, int):
+        check = bool(check)
+
+    # Kiểm tra các trường có tồn tại không
+    if username is None or man is None or ngot is None or cay is None:
+        return jsonify({"message": "Thông tin không hợp lệ"}), 400
+
+    # Kiểm tra kiểu dữ liệu
+    if not isinstance(man, int) or not isinstance(ngot, int) or not isinstance(cay, int):
+        return jsonify({"message": "Các trường 'man', 'ngot', và 'cay' phải là số nguyên"}), 400
+
+    # Thực hiện việc lưu vào cơ sở dữ liệu
+    new_food = Contact2(username=username, man=man, ngot=ngot, cay=cay, check=check)
+    db.session.add(new_food)
+    db.session.commit()
+
+    return jsonify({"message": "Thêm món ăn thành công!"}), 201
 
 @app.route("/update_contact/<int:user_id>", methods=["PATCH"])
 def update_contact(user_id):
