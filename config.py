@@ -9,6 +9,8 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__, static_folder="frontend/build", template_folder="frontend")
+    CORS(app)
+
     # Configuration settings
     #app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydatatbase.db"
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'postgresql://leledatabase_user:gllglkTmoT3sZmkWp1HzboT2AsYXeW5a@dpg-cr811g3tq21c739hlq40-a.oregon-postgres.render.com/leledatabase'
