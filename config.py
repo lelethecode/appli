@@ -9,14 +9,12 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__, static_folder="frontend/build", template_folder="frontend")
-    CORS(app, resources={r"/*": {"origins": "https://lelefrontend.onrender.com"}})
     # Configuration settings
     #app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydatatbase.db"
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'postgresql://leledatabase_user:gllglkTmoT3sZmkWp1HzboT2AsYXeW5a@dpg-cr811g3tq21c739hlq40-a.oregon-postgres.render.com/leledatabase'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.secret_key = os.getenv('SECRET_KEY', 'lelethecoder')  # Set your secret key
     # Initialize extensions
-    cors = CORS(app, resources={r"http://localhost:5173/": {"origins": "*"}})
     db.init_app(app)
     migrate.init_app(app, db)
 
