@@ -126,7 +126,6 @@ def get_contacts():
         return jsonify({"message": "An error occurred while fetching contacts.", "error": str(e)}), 500
 
 @app.route('/create_contact', methods=['POST'])
-@cross_origin()  # Kích hoạt CORS cho route này
 def create_contact():
     data = request.get_json()
 
@@ -167,7 +166,6 @@ def create_contact():
         return jsonify({"error": str(e)}), 500
     
 @app.route("/create_food", methods=["POST"])
-@cross_origin()  # Kích hoạt CORS cho route này
 def create_food():
     data = request.json
 
