@@ -1,4 +1,5 @@
 import os
+from sqlite3 import IntegrityError
 from flask import Flask, redirect, url_for, render_template, request, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -9,7 +10,7 @@ from model2 import Contact2
 from datetime import timedelta
 from config import create_app, db  # Ensure this imports correctly
 from flask_migrate import Migrate
-
+from flask_cors import CORS, cross_origin
 # db = SQLAlchemy()
 # migrate = Migrate()
 # app = Flask(__name__)
@@ -26,7 +27,7 @@ app = create_app()
 
 @app.route("/")
 def home():
-    return "Hello"
+    return render_template("base.html")
 
 # Define the xuly function
 def xuly():
@@ -35,7 +36,7 @@ def xuly():
         print(f"Total contacts found: {len(contacts)}")
 
         for contact in contacts:
-            if contact.check == 0:
+            if contact.check == False:
                 min_score = float('inf')
                 best_food = None
 
@@ -88,7 +89,8 @@ def favorite_foods():
             favorite_foods_list.append({
                 "user_id": contact.id,
                 "username": contact.username,
-                "favorite_food": favorite_food
+                "favorite_food": favorite_food,
+                "check":contact.check
             })
 
         return jsonify({"contacts": favorite_foods_list})
@@ -123,55 +125,76 @@ def get_contacts():
     except Exception as e:
         return jsonify({"message": "An error occurred while fetching contacts.", "error": str(e)}), 500
 
-@app.route("/create_contact", methods=["POST"])
+@app.route('/create_contact', methods=['POST'])
+@cross_origin()  # Kích hoạt CORS cho route này
 def create_contact():
-    try:
-        data = request.json
-        print("Received data:", data)  # Debug print
-        
-        username = data.get("username")
-        password = data.get("password")
-        email = data.get("email")
-        man = data.get("man")
-        ngot = data.get("ngot")
-        cay = data.get("cay")
-        if not username or not password or not email:
-            return jsonify({"message": "You must include a username and email"}), 400
+    data = request.get_json()
 
-        new_contact = Contact(username=username,man=man,ngot = ngot,cay = cay,email = email,password = password,check = 0)
-        
+    # Validate required fields
+    required_fields = ['username', 'password', 'email', 'man', 'ngot', 'cay']
+    for field in required_fields:
+        if field not in data or not data[field]:
+            return jsonify({"error": f"{field} is required."}), 400
+
+    # Validate 'man', 'ngot', 'cay' are integers between 1 and 3
+    for field in ['man', 'ngot', 'cay']:
+        if not isinstance(data[field], int) or not (1 <= data[field] <= 3):
+            return jsonify({"error": f"{field} must be an integer between 1 and 3."}), 400
+
+    # Create a new contact instance
+    new_contact = Contact(
+        username=data['username'],
+        password=data['password'],
+        email=data['email'],
+        man=data['man'],
+        ngot=data['ngot'],
+        cay=data['cay'],
+        favorite_food=data.get('favorite_food'),  # Optional field
+        check = False
+    )
+
+    # Save to the database
+    try:
         db.session.add(new_contact)
         db.session.commit()
-        
         xuly()
-        return jsonify({"message": "User created!"}), 201
+        return jsonify({"message": "Contact created successfully."}), 201
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify({"error": "Username or email already exists."}), 400
     except Exception as e:
-        print("Error:", str(e))  # Debug print
-        return jsonify({"message": "An error occurred while creating the user.", "error": str(e)}), 400
-
-
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+    
 @app.route("/create_food", methods=["POST"])
+@cross_origin()  # Kích hoạt CORS cho route này
 def create_food():
-    try:
-        data = request.json
-        print("Received data:", data)  # Debug print
-        
-        username = data.get("username")
-        man = data.get("man")
-        ngot = data.get("ngot")
-        cay = data.get("cay")
-        if not username:
-            return jsonify({"message": "You must include a username"}), 400
+    data = request.json
 
-        new_food = Contact2(username=username, man=man, ngot=ngot, cay=cay, check=0)
-        
-        db.session.add(new_food)
-        db.session.commit()
-        
-        return jsonify({"message": "Food created!"}), 201
-    except Exception as e:
-        print("Error:", str(e))  # Debug print
-        return jsonify({"message": "An error occurred while creating the food.", "error": str(e)}), 400
+    username = data.get('username')
+    man = data.get('man')
+    ngot = data.get('ngot')
+    cay = data.get('cay')
+    check = data.get('check', False)  # Giá trị mặc định là False nếu không có trong yêu cầu
+
+    # Chuyển đổi giá trị check từ 0/1 sang True/False
+    if isinstance(check, int):
+        check = bool(check)
+
+    # Kiểm tra các trường có tồn tại không
+    if username is None or man is None or ngot is None or cay is None:
+        return jsonify({"message": "Thông tin không hợp lệ"}), 400
+
+    # Kiểm tra kiểu dữ liệu
+    if not isinstance(man, int) or not isinstance(ngot, int) or not isinstance(cay, int):
+        return jsonify({"message": "Các trường 'man', 'ngot', và 'cay' phải là số nguyên"}), 400
+
+    # Thực hiện việc lưu vào cơ sở dữ liệu
+    new_food = Contact2(username=username, man=man, ngot=ngot, cay=cay, check=check)
+    db.session.add(new_food)
+    db.session.commit()
+
+    return jsonify({"message": "Thêm món ăn thành công!"}), 201
 
 @app.route("/update_contact/<int:user_id>", methods=["PATCH"])
 def update_contact(user_id):
@@ -247,5 +270,4 @@ def logout():
 
 if __name__ == "__main__":
     #schedule_tasks()  # Start scheduled tasks
-    app.run(debug=True)  # Start the Flask application
-    app.run(host = "0.0.0.0")
+    app.run(host="0.0.0.0", port=5000, debug=True)
