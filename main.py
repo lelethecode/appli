@@ -10,7 +10,6 @@ from model2 import Contact2
 from datetime import timedelta
 from config import create_app, db  # Ensure this imports correctly
 from flask_migrate import Migrate
-from flask_cors import CORS, cross_origin
 # db = SQLAlchemy()
 # migrate = Migrate()
 # app = Flask(__name__)
@@ -125,8 +124,7 @@ def get_contacts():
     except Exception as e:
         return jsonify({"message": "An error occurred while fetching contacts.", "error": str(e)}), 500
 
-@app.route('/create_contact', methods=['POST'])
-@cross_origin()  # Kích hoạt CORS cho route này
+@app.route("/create_contact", methods=["POST"])
 def create_contact():
     data = request.get_json()
 
@@ -167,7 +165,6 @@ def create_contact():
         return jsonify({"error": str(e)}), 500
     
 @app.route("/create_food", methods=["POST"])
-@cross_origin()  # Kích hoạt CORS cho route này
 def create_food():
     data = request.json
 

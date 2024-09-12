@@ -8,15 +8,13 @@ db = SQLAlchemy()
 migrate = Migrate()
 
 def create_app():
-    app = Flask(__name__,template_folder="frontend")
-    
+    app = Flask(__name__, static_folder="frontend/build", template_folder="frontend")
     # Configuration settings
     #app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydatatbase.db"
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'postgresql://leledatabase_user:gllglkTmoT3sZmkWp1HzboT2AsYXeW5a@dpg-cr811g3tq21c739hlq40-a.oregon-postgres.render.com/leledatabase'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.secret_key = os.getenv('SECRET_KEY', 'lelethecoder')  # Set your secret key
     # Initialize extensions
-    
     db.init_app(app)
     migrate.init_app(app, db)
 
