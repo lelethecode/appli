@@ -169,7 +169,7 @@ def get_contacts():
         return jsonify({"message": "An error occurred while fetching contacts.", "error": str(e)}), 500
 
 @app.route('/foodlist', methods=['GET'])
-def get_food_list():
+def get_food():
     # Query the database for the food items
     food_items = Contact2.query.all()
     
@@ -221,7 +221,17 @@ def create_contact():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
-    
+
+@app.route("/get_food_list", methods=["GET"])
+def get_food_list():
+    try:
+        food_items = Contact2.query.all()
+        food_list = [{"id": food.id, "name": food.username} for food in food_items]
+        return jsonify(food_list), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route("/create_food", methods=["POST"])
 def create_food():
     data = request.json
