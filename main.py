@@ -62,11 +62,54 @@ def xuly():
     except Exception as e:
         db.session.rollback()
         print(f"An error occurred while calculating taste: {e}")
+        
+def xulydon(user_id):
+    try:
+        # Query the contact with the given user_id
+        contact = Contact.query.get(user_id)
+        if contact is None:
+            print(f"No contact found with user_id {user_id}")
+            return
+
+        print(f"Calculating favorite food for contact {contact.username}")
+
+        if contact.check == False:
+            min_score = float('inf')
+            best_food = None
+
+            foods = Contact2.query.all()
+            print(f"Total foods found: {len(foods)}")
+
+            for food in foods:
+                score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
+                print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
+
+                if score < min_score:
+                    min_score = score
+                    best_food = food.username
+                    print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
+
+            if best_food:
+                contact.favorite_food = best_food
+                contact.check = True  # Mark the contact as having calculated favorite food
+                print(f"Updated contact {contact.username} with favorite food {best_food}")
+
+        db.session.commit()
+        print(f"Contact {contact.username} updated successfully.")
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"An error occurred while calculating favorite food for contact {contact.username}: {e}")
 
 @app.route("/run_xuly", methods=["POST"])
 def run_xuly():
     xuly()  # Call the helper function
     return jsonify({"message": "xuly function executed successfully."}), 200
+
+
+def run_xulydon(user_id):
+    xulydon(user_id)  # Call the function with the specific user ID
+    return jsonify({"message": f"xulydon function executed successfully for user {user_id}."}), 200
 
 # Route to display favorite foods for all users
 @app.route("/food_list", methods=["GET"])
@@ -125,6 +168,20 @@ def get_contacts():
     except Exception as e:
         return jsonify({"message": "An error occurred while fetching contacts.", "error": str(e)}), 500
 
+@app.route('/foodlist', methods=['GET'])
+def get_food_list():
+    # Query the database for the food items
+    food_items = Contact2.query.all()
+    
+    # Prepare the data in JSON format
+    food_list = [{
+        'id': food.id,
+        'name': food.username,  # Assuming username is the name of the food
+        'image_url': f'/images/{food.username}.jpg'  # Assuming images are named after the food
+    } for food in food_items]
+    
+    return jsonify(food_list)
+
 @app.route('/create_contact', methods=['POST'])
 def create_contact():
     data = request.get_json()
@@ -156,7 +213,7 @@ def create_contact():
     try:
         db.session.add(new_contact)
         db.session.commit()
-        xuly()
+        xulydon()
         return jsonify({"message": "Contact created successfully."}), 201
     except IntegrityError:
         db.session.rollback()

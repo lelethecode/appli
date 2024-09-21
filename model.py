@@ -26,4 +26,4 @@ class Contact(db.Model):
             "favorite_food":self.favorite_food,
             "check":self.check
             # "diung":self.diung,
-        }
+}
