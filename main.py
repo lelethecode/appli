@@ -301,8 +301,13 @@ def login():
     if not username or not password:
         return jsonify({"message": "Username and password are required"}), 400
 
-    # Authentication logic goes here
-    return jsonify({"message": "Login successful"}), 200
+    # Authentication logic using the database
+    user = Contact.query.filter_by(username=username).first()  # Query the user by username
+
+    if user and user.password == password:  # Check if user exists and password matches
+        return jsonify({"message": "Login successful", "success": True}), 200
+    else:
+        return jsonify({"message": "Invalid username or password"}), 401
 
 @app.route("/user", methods=["POST", "GET"])
 def user():
