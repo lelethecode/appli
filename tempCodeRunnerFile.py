@@ -207,11 +207,6 @@ def create_contact():
         ngot=data['ngot'],
         cay=data['cay'],
         favorite_food=data.get('favorite_food'),  # Optional field
-        favorite_food_t2=data.get('favorite_food_t2'),
-        favorite_food_t3=data.get('favorite_food_t3'),
-        favorite_food_t4=data.get('favorite_food_t4'),
-        favorite_food_t5=data.get('favorite_food_t5'),
-        favorite_food_t6=data.get('favorite_food_t6'),
         check = False
     )
 

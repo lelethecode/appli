@@ -12,6 +12,11 @@ class Contact(db.Model):
     cay = db.Column(db.Integer)
     #A = db.Column(db.String(120))
     favorite_food = db.Column(db.String(120))
+    favorite_food_t2 = db.Column(db.String(120))
+    favorite_food_t3 = db.Column(db.String(120))
+    favorite_food_t4 = db.Column(db.String(120))
+    favorite_food_t5 = db.Column(db.String(120))
+    favorite_food_t6 = db.Column(db.String(120))
     # diung = db.Column(db.Integer,unique = False,nullable = True)
     def to_json(self):
         return{
@@ -24,6 +29,11 @@ class Contact(db.Model):
             "cay": self.cay,
             #"A":self.A,
             "favorite_food":self.favorite_food,
+            "favorite_food_t2":self.favorite_food_t2,
+            "favorite_food_t3":self.favorite_food_t3,
+            "favorite_food_t4":self.favorite_food_t4,
+            "favorite_food_t5":self.favorite_food_t5,
+            "favorite_food_t6":self.favorite_food_t6,
             "check":self.check
             # "diung":self.diung,
 }
