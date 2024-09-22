@@ -154,7 +154,7 @@ def reset_food():
         for food in foods:
             food.check = 0
         
-        db.session.commit()
+            db.session.commit()
     
     except Exception as e:
         db.session.rollback()
@@ -322,23 +322,6 @@ def login():
     return jsonify({"success": True, "message": "Login successful", "user": user.to_json()})
 
 
-@app.route("/user", methods=["POST", "GET"])
-def user():
-    email = None
-    if "user" in session:
-        user = session["user"]
-        
-        if request.method == "POST":
-            email = request.form["email"]
-            session["email"] = email
-            flash("Bạn đã nhập thành công email của bạn")
-        else:
-            if "email" in session:
-                email = session["email"]
-        return render_template("User.html", email=email)
-    else:
-        flash("Bạn chưa đăng nhập")
-        return redirect(url_for("login"))
 
 @app.route("/logout")
 def logout():
