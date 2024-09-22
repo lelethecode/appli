@@ -292,21 +292,26 @@ def delete_contact(user_id):
 
     return jsonify({"message": "User deleted!"}), 200
 
-@app.route("/login", methods=["POST", "GET"])
-def login():
-    if request.method == "POST":
-        session.permanent = True    
-        user = request.form["nm"]
-        session["user"] = user
-        flash("Đăng nhập thành công")
-        return redirect(url_for("user"))
-    else:
-        if "user" in session:
-            flash("Bạn đã đăng nhập rồi")
-            return redirect(url_for("user"))
-        return render_template("login.html")
+from flask import Flask, request, jsonify
 
-@app.route("/user", methods=["POST", "GET"])
+app = Flask(__name__)
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()  # Parse JSON request body
+    username = data.get('username')
+    password = data.get('password')
+
+    # Validate username and password fields
+    if not username or not password:
+        return jsonify({"message": "Username and password are required"}), 400
+
+    # Proceed with login logic (e.g., checking credentials)
+    if username == "user" and password == "pass":  # Example logic
+        return jsonify({"message": "Login successful!"}), 200
+    else:
+        return jsonify({"message": "Invalid credentials"}), 401
+
 def user():
     email = None
     if "user" in session:
