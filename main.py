@@ -312,6 +312,7 @@ def login():
     else:
         return jsonify({"message": "Invalid credentials"}), 401
 
+
 def user():
     email = None
     if "user" in session:
