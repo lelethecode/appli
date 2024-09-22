@@ -221,9 +221,11 @@ def create_contact():
         db.session.commit()
         xulydon(new_contact.id)
         return jsonify({"message": "Contact created successfully."}), 201
-    except IntegrityError:
+    except IntegrityError as e:
         db.session.rollback()
+        print(f"IntegrityError: {e}")  # Log the error for more details
         return jsonify({"error": "Username or email already exists."}), 400
+
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
