@@ -292,27 +292,19 @@ def delete_contact(user_id):
 
     return jsonify({"message": "User deleted!"}), 200
 
-from flask import Flask, request, jsonify
-
-app = Flask(__name__)
-
 @app.route('/login', methods=['POST'])
 def login():
-    data = request.get_json()  # Parse JSON request body
+    data = request.get_json()  # Parses the JSON data from the request
     username = data.get('username')
     password = data.get('password')
 
-    # Validate username and password fields
     if not username or not password:
         return jsonify({"message": "Username and password are required"}), 400
 
-    # Proceed with login logic (e.g., checking credentials)
-    if username == "user" and password == "pass":  # Example logic
-        return jsonify({"message": "Login successful!"}), 200
-    else:
-        return jsonify({"message": "Invalid credentials"}), 401
+    # Authentication logic goes here
+    return jsonify({"message": "Login successful"}), 200
 
-
+@app.route("/user", methods=["POST", "GET"])
 def user():
     email = None
     if "user" in session:
