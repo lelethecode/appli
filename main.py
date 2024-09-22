@@ -74,7 +74,7 @@ def xulydon(user_id):
 
         print(f"Calculating favorite food for contact {contact.username}")
 
-        if contact.check == False:
+        if contact.check == 0:
             min_score = float('inf')
             best_food = None
 
