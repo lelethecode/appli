@@ -11,6 +11,7 @@ from datetime import timedelta
 from config import create_app, db  # Ensure this imports correctly
 from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
+from werkzeug.security import check_password_hash
 # db = SQLAlchemy()
 # migrate = Migrate()
 # app = Flask(__name__)
@@ -304,8 +305,12 @@ def login():
     # Authentication logic using the database
     user = Contact.query.filter_by(username=username).first()  # Query the user by username
 
-    if user and user.password == password:  # Check if user exists and password matches
-        return jsonify({"message": "Login successful", "success": True}), 200
+    if user and check_password_hash(user.password, password):  # Check if user exists and password matches
+        return jsonify({
+            "message": "Login successful",
+            "success": True,
+            "user": user.to_json()  # Include user data
+        }), 200
     else:
         return jsonify({"message": "Invalid username or password"}), 401
 
