@@ -212,7 +212,7 @@ def create_contact():
         favorite_food_t4=data.get('favorite_food_t4'),
         favorite_food_t5=data.get('favorite_food_t5'),
         favorite_food_t6=data.get('favorite_food_t6'),
-        check = False
+        check = 1
     )
 
     # Save to the database
