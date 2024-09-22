@@ -299,20 +299,23 @@ def login():
     username = data.get('username')
     password = data.get('password')
 
-    if not username or not password:
-        return jsonify({"message": "Username and password are required"}), 400
+    if not username or password is None:
+        return jsonify({"success": False, "message": "Username and password are required."}), 400
 
-    # Authentication logic using the database
-    user = Contact.query.filter_by(username=username).first()  # Query the user by username
+    # Find the user by username
+    user = Contact.query.filter_by(username=username).first()
 
-    if user and check_password_hash(user.password, password):  # Check if user exists and password matches
-        return jsonify({
-            "message": "Login successful",
-            "success": True,
-            "user": user.to_json()  # Include user data
-        }), 200
-    else:
-        return jsonify({"message": "Invalid username or password"}), 401
+    if user is None:
+        return jsonify({"success": False, "message": "Invalid username or password."}), 401
+
+    # Replace check_password_hash with a simple comparison
+    if user.password != password:  # Replace this line with your logic
+        return jsonify({"success": False, "message": "Invalid username or password."}), 401
+
+    # If the password is correct
+    session['user_id'] = user.id
+    return jsonify({"success": True, "message": "Login successful", "user": user.to_json()})
+
 
 @app.route("/user", methods=["POST", "GET"])
 def user():
