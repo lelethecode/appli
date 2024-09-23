@@ -37,7 +37,7 @@ def xuly():
         print(f"Total contacts found: {len(contacts)}")
 
         for contact in contacts:
-            if contact.check == False:
+            if contact.check == 0:
                 min_score = float('inf')
                 best_food = None
 
@@ -74,7 +74,7 @@ def xulydon(user_id):
 
         print(f"Calculating favorite food for contact {contact.username}")
 
-        if contact.check == False:
+        if contact.check == 0:
             min_score = float('inf')
             best_food = None
 
@@ -212,7 +212,7 @@ def create_contact():
         favorite_food_t4=data.get('favorite_food_t4'),
         favorite_food_t5=data.get('favorite_food_t5'),
         favorite_food_t6=data.get('favorite_food_t6'),
-        check = 0
+        check = 1
     )
 
     # Save to the database
