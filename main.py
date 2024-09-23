@@ -92,7 +92,7 @@ def xulydon(user_id):
 
             if best_food:
                 contact.favorite_food = best_food
-                contact.check = True  # Mark the contact as having calculated favorite food
+                contact.check = 1  # Mark the contact as having calculated favorite food
                 print(f"Updated contact {contact.username} with favorite food {best_food}")
 
         db.session.commit()
@@ -212,7 +212,7 @@ def create_contact():
         favorite_food_t4=data.get('favorite_food_t4'),
         favorite_food_t5=data.get('favorite_food_t5'),
         favorite_food_t6=data.get('favorite_food_t6'),
-        check = 1
+        check = 0
     )
 
     # Save to the database
