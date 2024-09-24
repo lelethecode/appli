@@ -346,8 +346,6 @@ def create_food():
     check = data.get('check', 0)  # Giá trị mặc định là False nếu không có trong yêu cầu
 
     # Chuyển đổi giá trị check từ 0/1 sang True/False
-    if isinstance(check, int):
-        check = bool(check)
 
     # Kiểm tra các trường có tồn tại không
     if username is None or man is None or ngot is None or cay is None:
