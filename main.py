@@ -343,7 +343,7 @@ def create_food():
     man = data.get('man')
     ngot = data.get('ngot')
     cay = data.get('cay')
-    check = data.get('check', False)  # Giá trị mặc định là False nếu không có trong yêu cầu
+    check = data.get('check', 0)  # Giá trị mặc định là False nếu không có trong yêu cầu
 
     # Chuyển đổi giá trị check từ 0/1 sang True/False
     if isinstance(check, int):
