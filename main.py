@@ -74,7 +74,7 @@ def xulydon(user_id):
 
         print(f"Calculating favorite food for contact {contact.username}")
 
-        if contact.check == 0:
+        if contact.check != 1:
             min_score = float('inf')
             best_food = None
 
@@ -82,18 +82,66 @@ def xulydon(user_id):
             print(f"Total foods found: {len(foods)}")
 
             for food in foods:
-                score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
-                print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
+                if food.check == 2:
+                    score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
+                    print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
 
-                if score < min_score:
-                    min_score = score
-                    best_food = food.username
-                    print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
+                    if score < min_score:
+                        min_score = score
+                        best_food = food.username
+                        print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
+                    if best_food:
+                        contact.favorite_food_t2 = best_food
+                        contact.check = 1  # Mark the contact as having calculated favorite food
+                        print(f"Updated contact {contact.username} with favorite food {best_food}")
+                if food.check == 3:
+                    score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
+                    print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
 
-            if best_food:
-                contact.favorite_food = best_food
-                contact.check = True  # Mark the contact as having calculated favorite food
-                print(f"Updated contact {contact.username} with favorite food {best_food}")
+                    if score < min_score:
+                        min_score = score
+                        best_food = food.username
+                        print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
+                    if best_food:
+                        contact.favorite_food_t3 = best_food
+                        contact.check = 1  # Mark the contact as having calculated favorite food
+                        print(f"Updated contact {contact.username} with favorite food {best_food}")
+                if food.check == 4:
+                    score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
+                    print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
+
+                    if score < min_score:
+                        min_score = score
+                        best_food = food.username
+                        print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
+                    if best_food:
+                        contact.favorite_food_t4 = best_food
+                        contact.check = 1  # Mark the contact as having calculated favorite food
+                        print(f"Updated contact {contact.username} with favorite food {best_food}")
+                if food.check == 5:
+                    score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
+                    print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
+
+                    if score < min_score:
+                        min_score = score
+                        best_food = food.username
+                        print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
+                    if best_food:
+                        contact.favorite_food_t5 = best_food
+                        contact.check = 1  # Mark the contact as having calculated favorite food
+                        print(f"Updated contact {contact.username} with favorite food {best_food}")
+                if food.check == 6:
+                    score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
+                    print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
+
+                    if score < min_score:
+                        min_score = score
+                        best_food = food.username
+                        print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
+                    if best_food:
+                        contact.favorite_food_t6 = best_food
+                        contact.check = 1  # Mark the contact as having calculated favorite food
+                        print(f"Updated contact {contact.username} with favorite food {best_food}")
 
         db.session.commit()
         print(f"Contact {contact.username} updated successfully.")
@@ -102,6 +150,36 @@ def xulydon(user_id):
         db.session.rollback()
         print(f"An error occurred while calculating favorite food for contact {contact.username}: {e}")
 
+@app.route('/choose_food', methods=['POST'])
+def choose_food():
+    data = request.get_json()
+    selected_foods = data.get('selected_foods', [])  # List of selected foods with day checks
+
+    if not selected_foods:
+        return jsonify({"message": "No food selected"}), 400
+
+    try:
+        for item in selected_foods:
+            food_id = item.get('foodId')
+            check_value = item.get('dayCheck')
+
+            # Validate the day check
+            if check_value not in [2, 3, 4, 5, 6]:  # Valid days are Monday to Friday
+                return jsonify({"message": "Invalid day check value"}), 400
+
+            # Update the food item in the database
+            food = Contact2.query.filter_by(id=food_id).first()
+            if food:
+                food.check = check_value
+
+        db.session.commit()
+        return jsonify({"message": "Food selection updated successfully"}), 200
+
+    except Exception as e:
+        print(e)
+        return jsonify({"message": "Failed to update food selection"}), 500
+
+    
 @app.route("/run_xuly", methods=["POST"])
 def run_xuly():
     xuly()  # Call the helper function
@@ -121,6 +199,23 @@ def food_list():
         return jsonify({"contacts": json_contacts})
     except Exception as e:
         return jsonify({"message": "An error occurred while fetching contacts.", "error": str(e)}), 500
+
+@app.route('/favorite-food', methods=['GET'])
+def get_favorite_food(user_id):
+    user_id = request.args.get('user_id')  # Example function to get the current user
+    contact = Contact.query.filter_by(id=user_id).first()
+    if contact:
+        return jsonify({
+            't2': contact.favorite_food_t2,
+            't3': contact.favorite_food_t3,
+            't4': contact.favorite_food_t4,
+            't5': contact.favorite_food_t5,
+            't6': contact.favorite_food_t6,
+        })
+    else:
+        return jsonify({'error': 'User not found'}), 404
+
+
 
 @app.route("/favorite_foods", methods=["GET"])
 def favorite_foods():
@@ -212,14 +307,14 @@ def create_contact():
         favorite_food_t4=data.get('favorite_food_t4'),
         favorite_food_t5=data.get('favorite_food_t5'),
         favorite_food_t6=data.get('favorite_food_t6'),
-        check = 1
+        check = 0
     )
 
     # Save to the database
     try:
         db.session.add(new_contact)
         db.session.commit()
-        xulydon(new_contact.id)
+        run_xulydon(new_contact.id)
         return jsonify({"message": "Contact created successfully."}), 201
     except IntegrityError as e:
         db.session.rollback()

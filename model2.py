@@ -3,7 +3,7 @@ from config import db
 class Contact2(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120),nullable = False,unique = True)
-    check = db.Column(db.Boolean, default=False)
+    check = db.Column(db.Integer, default=0)
     man = db.Column(db.Integer)
     ngot = db.Column(db.Integer)
     cay = db.Column(db.Integer)
