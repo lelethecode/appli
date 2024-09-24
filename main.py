@@ -160,6 +160,7 @@ def choose_food():
 
     try:
         print(selected_foods)
+        print(userid)
         for food_id, check_value in selected_foods.items():
 
             
@@ -176,6 +177,7 @@ def choose_food():
                     food.favorite_food_t5 = check_value
                 if food_id == 'friday':
                     food.favorite_food_t6 = check_value
+            food.check = 1
 
         db.session.commit()
         return jsonify({"message": "Food selection updated successfully"}), 200
