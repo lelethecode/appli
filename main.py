@@ -153,24 +153,29 @@ def xulydon(user_id):
 @app.route('/choose_food', methods=['POST'])
 def choose_food():
     data = request.get_json()
-    selected_foods = data.get('selected_foods', [])  # List of selected foods with day checks
-
+    selected_foods = data['selected_foods']  # List of selected foods with day checks
+    userid = data['user_id']
     if not selected_foods:
         return jsonify({"message": "No food selected"}), 400
 
     try:
-        for item in selected_foods:
-            food_id = item.get('foodId')
-            check_value = item.get('dayCheck')
+        print(selected_foods)
+        for food_id, check_value in selected_foods.items():
 
-            # Validate the day check
-            if check_value not in [2, 3, 4, 5, 6]:  # Valid days are Monday to Friday
-                return jsonify({"message": "Invalid day check value"}), 400
-
+            
             # Update the food item in the database
-            food = Contact2.query.filter_by(id=food_id).first()
+            food = Contact.query.filter_by(id = userid).first()
             if food:
-                food.check = check_value
+                if food_id == 'monday':
+                    food.favorite_food_t2 = check_value
+                if food_id == 'tuesday':
+                    food.favorite_food_t3 = check_value
+                if food_id == 'wednesday':
+                    food.favorite_food_t4 = check_value
+                if food_id == 'thursday':
+                    food.favorite_food_t5 = check_value
+                if food_id == 'friday':
+                    food.favorite_food_t6 = check_value
 
         db.session.commit()
         return jsonify({"message": "Food selection updated successfully"}), 200
@@ -201,8 +206,9 @@ def food_list():
         return jsonify({"message": "An error occurred while fetching contacts.", "error": str(e)}), 500
 
 @app.route('/favorite-food', methods=['GET'])
-def get_favorite_food(user_id):
-    user_id = request.args.get('user_id')  # Example function to get the current user
+def get_favorite_food():
+    user_id = request.args.get('user_id')
+    print(user_id)  
     contact = Contact.query.filter_by(id=user_id).first()
     if contact:
         return jsonify({
