@@ -74,7 +74,11 @@ def xulydon(user_id):
 
         print(f"Calculating favorite food for contact {contact.username}")
 
+<<<<<<< HEAD
         if contact.check != 1:
+=======
+        if contact.check == 0:
+>>>>>>> ad9de58223863c2055c45b0a918b476291390540
             min_score = float('inf')
             best_food = None
 
@@ -98,6 +102,7 @@ def xulydon(user_id):
                     score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
                     print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
 
+<<<<<<< HEAD
                     if score < min_score:
                         min_score = score
                         best_food = food.username
@@ -142,6 +147,12 @@ def xulydon(user_id):
                         contact.favorite_food_t6 = best_food
                         contact.check = 1  # Mark the contact as having calculated favorite food
                         print(f"Updated contact {contact.username} with favorite food {best_food}")
+=======
+            if best_food:
+                contact.favorite_food = best_food
+                contact.check = 1  # Mark the contact as having calculated favorite food
+                print(f"Updated contact {contact.username} with favorite food {best_food}")
+>>>>>>> ad9de58223863c2055c45b0a918b476291390540
 
         db.session.commit()
         print(f"Contact {contact.username} updated successfully.")
