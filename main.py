@@ -1,6 +1,6 @@
 import os
 from sqlite3 import IntegrityError
-from flask import Flask, redirect, url_for, render_template, request, session, flash, jsonify
+from flask import Flask, redirect, url_for, render_template, request, session, flash, jsonify,json
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -154,18 +154,20 @@ def xulydon(user_id):
 def choose_food():
     data = request.get_json()
     selected_foods = data['selected_foods']  # List of selected foods with day checks
-    userid = data['user_id']
+    userid = json.loads(data['user_id'])
+    #print(userid["id"])
     if not selected_foods:
         return jsonify({"message": "No food selected"}), 400
 
     try:
-        print(selected_foods)
-        print(userid)
+        #print(selected_foods)
+        #print(userid)
+        
         for food_id, check_value in selected_foods.items():
 
-            
+            print(userid["id"])
             # Update the food item in the database
-            food = Contact.query.filter_by(id = userid).first()
+            food = Contact.query.filter_by(id = userid["id"]).first()
             if food:
                 if food_id == 'monday':
                     food.favorite_food_t2 = check_value
@@ -177,13 +179,13 @@ def choose_food():
                     food.favorite_food_t5 = check_value
                 if food_id == 'friday':
                     food.favorite_food_t6 = check_value
-            food.check = 1
+                food.check = 1
 
         db.session.commit()
         return jsonify({"message": "Food selection updated successfully"}), 200
 
     except Exception as e:
-        print(e)
+        #print(userid)
         return jsonify({"message": "Failed to update food selection"}), 500
 
     
