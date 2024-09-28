@@ -9,7 +9,7 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__, static_folder="frontend/build", template_folder="frontend")
-    CORS(app)
+    CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
     # Configuration settings
     #app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydatatbase.db"

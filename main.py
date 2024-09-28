@@ -155,7 +155,7 @@ def choose_food():
     data = request.get_json()
     selected_foods = data['selected_foods']  # List of selected foods with day checks
     userid = json.loads(data['user_id'])
-    #print(userid["id"])
+    print(userid["id"])
     if not selected_foods:
         return jsonify({"message": "No food selected"}), 400
 
@@ -185,7 +185,7 @@ def choose_food():
         return jsonify({"message": "Food selection updated successfully"}), 200
 
     except Exception as e:
-        #print(userid)
+        print(userid)
         return jsonify({"message": "Failed to update food selection"}), 500
 
     
