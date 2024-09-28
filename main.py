@@ -155,7 +155,7 @@ def choose_food():
     data = request.get_json()
     selected_foods = data['selected_foods']  # List of selected foods with day checks
     userid = json.loads(data['user_id'])
-    print(userid["id"])
+    print(userid)
     if not selected_foods:
         return jsonify({"message": "No food selected"}), 400
 
