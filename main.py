@@ -161,22 +161,19 @@ def choose_food_week():
         return jsonify({"message": "No food selected"}), 400
 
     try:
-        contact = Contact2.query.filter_by().first()
-        # if contact:
-        #     for food_item in selected_foods:
-                
-        #         if day == 2:
-        #             contact.check = food_id
-        #         elif day == 3:
-        #             contact.check = food_id
-        #         elif day == 4:
-        #             contact.check = food_id
-        #         elif day == 5:
-        #             contact.check = food_id
-        #         elif day == 6:
-        #             contact.check = food_id
-        #     contact.check = 1  # Mark as processed
-        #     db.session.commit()
+        for food_id, check_value in selected_foods.items():
+            food = Contact.query.filter_by(id = food_id).first()
+            if check_value == 2:
+                food.check = check_value
+            elif check_value == 3:
+                food.check = check_value
+            elif check_value == 4:
+                food.check = check_value
+            elif check_value == 5:
+                food.check = check_value
+            elif check_value == 6:
+                food.check = check_value
+        db.session.commit()
         return jsonify({"message": "Food selection updated successfully"}), 200
     except Exception as e:
         db.session.rollback()
