@@ -376,7 +376,7 @@ def create_contact():
 def get_food_list():
     try:
         food_items = Contact2.query.all()
-        food_list = [{"id": food.id, "name": food.username} for food in food_items]
+        food_list = [{"id": food.id, "name": food.username, "check": food.check} for food in food_items]
         return jsonify(food_list), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
