@@ -153,7 +153,7 @@ def xulydon(user_id):
 @app.route('/choose_food_week', methods=['POST'])
 def choose_food_week():
     data = request.get_json()
-    selected_foods = data.get('selectedFoods', [])
+    selected_foods = data.get('selectedFoods')
     print(selected_foods)
       # Assuming user is logged in and session contains user_id
     
