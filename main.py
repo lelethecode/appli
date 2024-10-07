@@ -143,7 +143,7 @@ def submit_feedback():
     feedback = data['feedback']
 
     # Logic to save feedback to the database
-    contact = Contact.query.get(id = userid["id"])
+    contact = Contact.query.filter_by(id = userid["id"]).first()
     if contact:
         contact.feedback = feedback  # Save the feedback
         db.session.commit()
