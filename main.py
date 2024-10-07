@@ -25,8 +25,16 @@ def xuly():
 
         for contact in contacts:
             if contact.check == 0:
-                min_score = float('inf')
-                best_food = None
+                min_score2 = float('inf')
+                min_score3 = float('inf')
+                min_score4 = float('inf')
+                min_score5 = float('inf')
+                min_score6 = float('inf')
+                best_food2 = None
+                best_food3 = None
+                best_food4 = None
+                best_food5 = None
+                best_food6 = None
 
                 foods = Contact2.query.all()
                 print(f"Total foods found: {len(foods)}")
@@ -63,6 +71,16 @@ def xulydon(user_id):
         if contact.check != 1:
             min_score = float('inf')
             best_food = None
+            min_score2 = float('inf')
+            min_score3 = float('inf')
+            min_score4 = float('inf')
+            min_score5 = float('inf')
+            min_score6 = float('inf')
+            best_food2 = None
+            best_food3 = None
+            best_food4 = None
+            best_food5 = None
+            best_food6 = None
 
             foods = Contact2.query.all()
             print(f"Total foods found: {len(foods)}")
@@ -72,60 +90,60 @@ def xulydon(user_id):
                     score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
                     print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
 
-                    if score < min_score:
-                        min_score = score
-                        best_food = food.username
+                    if score < min_score2:
+                        min_score2 = score
+                        best_food2 = food.username
                         print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
                     if best_food:
-                        contact.favorite_food_t2 = best_food
+                        contact.favorite_food_t2 = best_food2
                         contact.check = 1 
                         print(f"Updated contact {contact.username} with favorite food {best_food}")
                 if food.check == 3:
                     score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
                     print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
 
-                    if score < min_score:
-                        min_score = score
-                        best_food = food.username
+                    if score < min_score3:
+                        min_score3 = score
+                        best_food3 = food.username
                         print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
                     if best_food:
-                        contact.favorite_food_t3 = best_food
+                        contact.favorite_food_t3 = best_food3
                         contact.check = 1
                         print(f"Updated contact {contact.username} with favorite food {best_food}")
                 if food.check == 4:
                     score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
                     print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
 
-                    if score < min_score:
-                        min_score = score
-                        best_food = food.username
+                    if score < min_score4:
+                        min_score4 = score
+                        best_food4 = food.username
                         print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
                     if best_food:
-                        contact.favorite_food_t4 = best_food
+                        contact.favorite_food_t4 = best_food4
                         contact.check = 1 
                         print(f"Updated contact {contact.username} with favorite food {best_food}")
                 if food.check == 5:
                     score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
                     print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
 
-                    if score < min_score:
-                        min_score = score
-                        best_food = food.username
+                    if score < min_score5:
+                        min_score5 = score
+                        best_food5 = food.username
                         print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
                     if best_food:
-                        contact.favorite_food_t5 = best_food
+                        contact.favorite_food_t5 = best_food5
                         contact.check = 1 
                         print(f"Updated contact {contact.username} with favorite food {best_food}")
                 if food.check == 6:
                     score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
                     print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
 
-                    if score < min_score:
-                        min_score = score
-                        best_food = food.username
+                    if score < min_score6:
+                        min_score6 = score
+                        best_food6 = food.username
                         print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
                     if best_food:
-                        contact.favorite_food_t6 = best_food
+                        contact.favorite_food_t6 = best_food6
                         contact.check = 1  
                         print(f"Updated contact {contact.username} with favorite food {best_food}")
 
