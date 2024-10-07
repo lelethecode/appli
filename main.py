@@ -140,7 +140,7 @@ def xulydon(user_id):
 def submit_feedback():
     data = request.get_json()
     userid = json.loads(data['user_id'])
-    feedback = data.get('feedback')
+    feedback = data['feedback']
 
     # Logic to save feedback to the database
     contact = Contact.query.get(id = userid["id"])
