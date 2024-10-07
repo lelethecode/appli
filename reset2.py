@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 # Configure your app and database
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://leledatabase_user:gllglkTmoT3sZmkWp1HzboT2AsYXeW5a@dpg-cr811g3tq21c739hlq40-a.oregon-postgres.render.com/leledatabase'  # Update with your actual database URI
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://leledatabase_zj8a_user:UhlqQO3FKIcYYbxnzfbR7CjA6KOkX94W@dpg-crrq63l6l47c73cmphm0-a.oregon-postgres.render.com/leledatabase_zj8a'  # Update with your actual database URI
 db = SQLAlchemy(app)
 
 # Import your models
