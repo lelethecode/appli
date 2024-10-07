@@ -317,7 +317,7 @@ def create_contact():
             return jsonify({"error": f"{field} is required."}), 400
 
     for field in ['man', 'ngot', 'cay']:
-        if not isinstance(data[field], int) or not (1 <= data[field] <= 3):
+        if not isinstance(data[field], int) or not (0 <= data[field] <= 100):
             return jsonify({"error": f"{field} must be an integer between 1 and 3."}), 400
 
     new_contact = Contact(
