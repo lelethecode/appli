@@ -94,7 +94,7 @@ def xulydon(user_id):
                         min_score2 = score
                         best_food2 = food.username
                         print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
-                    if best_food:
+                    if best_food2:
                         contact.favorite_food_t2 = best_food2
                         contact.check = 1 
                         print(f"Updated contact {contact.username} with favorite food {best_food}")
@@ -106,7 +106,7 @@ def xulydon(user_id):
                         min_score3 = score
                         best_food3 = food.username
                         print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
-                    if best_food:
+                    if best_food3:
                         contact.favorite_food_t3 = best_food3
                         contact.check = 1
                         print(f"Updated contact {contact.username} with favorite food {best_food}")
@@ -118,7 +118,7 @@ def xulydon(user_id):
                         min_score4 = score
                         best_food4 = food.username
                         print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
-                    if best_food:
+                    if best_food4:
                         contact.favorite_food_t4 = best_food4
                         contact.check = 1 
                         print(f"Updated contact {contact.username} with favorite food {best_food}")
@@ -130,7 +130,7 @@ def xulydon(user_id):
                         min_score5 = score
                         best_food5 = food.username
                         print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
-                    if best_food:
+                    if best_food5:
                         contact.favorite_food_t5 = best_food5
                         contact.check = 1 
                         print(f"Updated contact {contact.username} with favorite food {best_food}")
@@ -142,7 +142,7 @@ def xulydon(user_id):
                         min_score6 = score
                         best_food6 = food.username
                         print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
-                    if best_food:
+                    if best_food6:
                         contact.favorite_food_t6 = best_food6
                         contact.check = 1  
                         print(f"Updated contact {contact.username} with favorite food {best_food}")
