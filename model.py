@@ -17,6 +17,7 @@ class Contact(db.Model):
     favorite_food_t4 = db.Column(db.String(120))
     favorite_food_t5 = db.Column(db.String(120))
     favorite_food_t6 = db.Column(db.String(120))
+    feedback = db.Column(db.Text)
     def to_json(self):
         return{
             "id": self.id,
@@ -33,6 +34,7 @@ class Contact(db.Model):
             "favorite_food_t4":self.favorite_food_t4,
             "favorite_food_t5":self.favorite_food_t5,
             "favorite_food_t6":self.favorite_food_t6,
-            "check":self.check
+            "check":self.check,
+            "feedback": self.feedback
             # "diung":self.diung,
 }

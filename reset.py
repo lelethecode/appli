@@ -23,6 +23,7 @@ class Contact(db.Model):
     favorite_food_t4 = db.Column(db.String(120))
     favorite_food_t5 = db.Column(db.String(120))
     favorite_food_t6 = db.Column(db.String(120))
+    feedback = db.Column(db.String(2000000000049))
 
 # Drop all tables and create new ones
 with app.app_context():

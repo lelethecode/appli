@@ -136,6 +136,22 @@ def xulydon(user_id):
         db.session.rollback()
         print(f"An error occurred while calculating favorite food for contact {contact.username}: {e}")
 
+@app.route('/submit_feedback', methods=['POST'])
+def submit_feedback():
+    data = request.get_json()
+    user_id = data.get('user_id')
+    feedback = data.get('feedback')
+
+    # Logic to save feedback to the database
+    contact = Contact.query.get(user_id)
+    if contact:
+        contact.feedback = feedback  # Save the feedback
+        db.session.commit()
+        return jsonify({"message": "Feedback submitted successfully!"}), 200
+    else:
+        return jsonify({"message": "User not found."}), 404
+    
+
 @app.route('/choose_food_week', methods=['POST'])
 def choose_food_week():
     data = request.get_json()
