@@ -136,11 +136,49 @@ def xulydon(user_id):
         db.session.rollback()
         print(f"An error occurred while calculating favorite food for contact {contact.username}: {e}")
 
+@app.route('/choose_food_week', methods=['POST'])
+def choose_food_week():
+    data = request.get_json()
+    selected_foods = data.get('selected_foods')  # This is a list of dicts [{'foodId': 1, 'dayCheck': 2}, ...]
+
+    if not selected_foods:
+        return jsonify({"message": "No food selected"}), 400
+
+    try:
+        for item in selected_foods:
+            # Extract foodId and dayCheck from the dictionary
+            food_id = int(item.get('foodId'))  # Convert foodId to an integer
+            day_check = int(item.get('dayCheck'))  # dayCheck is already an integer
+
+            # Debugging output
+            print(f"Processing food_id: {food_id}, day_check: {day_check}")
+
+            # Query the Contact2 table to find the food item by its ID
+            food = Contact2.query.filter_by(id=food_id).first()
+
+            if food:
+                # Update the 'check' field based on day_check
+                food.check = day_check
+            else:
+                # If the food item is not found, return an error message
+                return jsonify({"message": f"Food with id {food_id} not found"}), 404
+
+        # Commit all changes to the database after the loop
+        db.session.commit()
+        return jsonify({"message": "Food selection updated successfully"}), 200
+
+    except Exception as e:
+        # Rollback any changes in case of an error
+        db.session.rollback()
+        return jsonify({"message": "Failed to update food selection", "error": str(e)}), 500
+
+
 @app.route('/choose_food', methods=['POST'])
 def choose_food():
     data = request.get_json()
     selected_foods = data['selected_foods'] 
     userid = json.loads(data['user_id'])
+    print(userid)
     if not selected_foods:
         return jsonify({"message": "No food selected"}), 400
 
@@ -168,6 +206,7 @@ def choose_food():
         return jsonify({"message": "Food selection updated successfully"}), 200
 
     except Exception as e:
+        #print(userid)
         return jsonify({"message": "Failed to update food selection"}), 500
 
     
@@ -316,7 +355,7 @@ def create_contact():
 def get_food_list():
     try:
         food_items = Contact2.query.all()
-        food_list = [{"id": food.id, "name": food.username} for food in food_items]
+        food_list = [{"id": food.id, "name": food.username, "check": food.check} for food in food_items]
         return jsonify(food_list), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
