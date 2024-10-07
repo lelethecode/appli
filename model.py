@@ -1,7 +1,7 @@
 from config import db
 
 class Contact(db.Model):
-    __tablename__ = 'contact'  # Make sure the table name is correct
+    __tablename__ = 'contact' 
     id = db.Column(db.Integer, primary_key=True)
     check = db.Column(db.Integer)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -10,14 +10,13 @@ class Contact(db.Model):
     man = db.Column(db.Integer)
     ngot = db.Column(db.Integer)
     cay = db.Column(db.Integer)
-    #A = db.Column(db.String(120))
+    
     favorite_food = db.Column(db.String(120))
     favorite_food_t2 = db.Column(db.String(120))
     favorite_food_t3 = db.Column(db.String(120))
     favorite_food_t4 = db.Column(db.String(120))
     favorite_food_t5 = db.Column(db.String(120))
     favorite_food_t6 = db.Column(db.String(120))
-    # diung = db.Column(db.Integer,unique = False,nullable = True)
     def to_json(self):
         return{
             "id": self.id,
