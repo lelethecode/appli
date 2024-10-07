@@ -8,29 +8,16 @@ from sqlalchemy import text
 from model import Contact
 from model2 import Contact2
 from datetime import timedelta
-from config import create_app, db  # Ensure this imports correctly
+from config import create_app, db  
 from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
 from werkzeug.security import check_password_hash
-# db = SQLAlchemy()
-# migrate = Migrate()
-# app = Flask(__name__)
-
-# # Configuration settings
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://leledatabase_user:lele9920483@dpg-cr811g3tq21c739hlq40-a/leledatabase')
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# #app.secret_key = os.getenv('SECRET_KEY', 'lelethecoder')  # Set your secret key
-
-# # Initialize extensions
-# db.init_app(app)
-# migrate.init_app(app, db)  # Create the app instance
 app = create_app()
 
 @app.route("/")
 def home():
     return render_template("base.html")
 
-# Define the xuly function
 def xuly():
     try:
         contacts = Contact.query.all()
@@ -66,7 +53,6 @@ def xuly():
         
 def xulydon(user_id):
     try:
-        # Query the contact with the given user_id
         contact = Contact.query.get(user_id)
         if contact is None:
             print(f"No contact found with user_id {user_id}")
@@ -92,7 +78,7 @@ def xulydon(user_id):
                         print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
                     if best_food:
                         contact.favorite_food_t2 = best_food
-                        contact.check = 1  # Mark the contact as having calculated favorite food
+                        contact.check = 1 
                         print(f"Updated contact {contact.username} with favorite food {best_food}")
                 if food.check == 3:
                     score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
@@ -104,7 +90,7 @@ def xulydon(user_id):
                         print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
                     if best_food:
                         contact.favorite_food_t3 = best_food
-                        contact.check = 1  # Mark the contact as having calculated favorite food
+                        contact.check = 1
                         print(f"Updated contact {contact.username} with favorite food {best_food}")
                 if food.check == 4:
                     score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
@@ -116,7 +102,7 @@ def xulydon(user_id):
                         print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
                     if best_food:
                         contact.favorite_food_t4 = best_food
-                        contact.check = 1  # Mark the contact as having calculated favorite food
+                        contact.check = 1 
                         print(f"Updated contact {contact.username} with favorite food {best_food}")
                 if food.check == 5:
                     score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
@@ -128,7 +114,7 @@ def xulydon(user_id):
                         print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
                     if best_food:
                         contact.favorite_food_t5 = best_food
-                        contact.check = 1  # Mark the contact as having calculated favorite food
+                        contact.check = 1 
                         print(f"Updated contact {contact.username} with favorite food {best_food}")
                 if food.check == 6:
                     score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
@@ -140,7 +126,7 @@ def xulydon(user_id):
                         print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
                     if best_food:
                         contact.favorite_food_t6 = best_food
-                        contact.check = 1  # Mark the contact as having calculated favorite food
+                        contact.check = 1  
                         print(f"Updated contact {contact.username} with favorite food {best_food}")
 
         db.session.commit()
@@ -153,20 +139,17 @@ def xulydon(user_id):
 @app.route('/choose_food', methods=['POST'])
 def choose_food():
     data = request.get_json()
-    selected_foods = data['selected_foods']  # List of selected foods with day checks
+    selected_foods = data['selected_foods'] 
     userid = json.loads(data['user_id'])
-    #print(userid["id"])
     if not selected_foods:
         return jsonify({"message": "No food selected"}), 400
 
     try:
-        #print(selected_foods)
-        #print(userid)
+       
         
         for food_id, check_value in selected_foods.items():
 
             print(userid["id"])
-            # Update the food item in the database
             food = Contact.query.filter_by(id = userid["id"]).first()
             if food:
                 if food_id == 'monday':
@@ -185,21 +168,20 @@ def choose_food():
         return jsonify({"message": "Food selection updated successfully"}), 200
 
     except Exception as e:
-        #print(userid)
         return jsonify({"message": "Failed to update food selection"}), 500
 
     
 @app.route("/run_xuly", methods=["POST"])
 def run_xuly():
-    xuly()  # Call the helper function
+    xuly()  
     return jsonify({"message": "xuly function executed successfully."}), 200
 
 
 def run_xulydon(user_id):
-    xulydon(user_id)  # Call the function with the specific user ID
+    xulydon(user_id) 
     return jsonify({"message": f"xulydon function executed successfully for user {user_id}."}), 200
 
-# Route to display favorite foods for all users
+
 @app.route("/food_list", methods=["GET"])
 def food_list():
     try:
@@ -276,14 +258,12 @@ def get_contacts():
 
 @app.route('/foodlist', methods=['GET'])
 def get_food():
-    # Query the database for the food items
     food_items = Contact2.query.all()
     
-    # Prepare the data in JSON format
     food_list = [{
         'id': food.id,
-        'name': food.username,  # Assuming username is the name of the food
-        'image_url': f'/images/{food.username}.jpg'  # Assuming images are named after the food
+        'name': food.username,  
+        'image_url': f'/images/{food.username}.jpg' 
     } for food in food_items]
     
     return jsonify(food_list)
@@ -292,18 +272,15 @@ def get_food():
 def create_contact():
     data = request.get_json()
 
-    # Validate required fields
     required_fields = ['username', 'password', 'email', 'man', 'ngot', 'cay']
     for field in required_fields:
         if field not in data or not data[field]:
             return jsonify({"error": f"{field} is required."}), 400
 
-    # Validate 'man', 'ngot', 'cay' are integers between 1 and 3
     for field in ['man', 'ngot', 'cay']:
         if not isinstance(data[field], int) or not (1 <= data[field] <= 3):
             return jsonify({"error": f"{field} must be an integer between 1 and 3."}), 400
 
-    # Create a new contact instance
     new_contact = Contact(
         username=data['username'],
         password=data['password'],
@@ -311,7 +288,7 @@ def create_contact():
         man=data['man'],
         ngot=data['ngot'],
         cay=data['cay'],
-        favorite_food=data.get('favorite_food'),  # Optional field
+        favorite_food=data.get('favorite_food'),  
         favorite_food_t2=data.get('favorite_food_t2'),
         favorite_food_t3=data.get('favorite_food_t3'),
         favorite_food_t4=data.get('favorite_food_t4'),
@@ -320,7 +297,7 @@ def create_contact():
         check = 0
     )
 
-    # Save to the database
+    
     try:
         db.session.add(new_contact)
         db.session.commit()
@@ -328,7 +305,7 @@ def create_contact():
         return jsonify({"message": "Contact created successfully."}), 201
     except IntegrityError as e:
         db.session.rollback()
-        print(f"IntegrityError: {e}")  # Log the error for more details
+        print(f"IntegrityError: {e}")  
         return jsonify({"error": "Username or email already exists."}), 400
 
     except Exception as e:
@@ -353,19 +330,15 @@ def create_food():
     man = data.get('man')
     ngot = data.get('ngot')
     cay = data.get('cay')
-    check = data.get('check', 0)  # Giá trị mặc định là False nếu không có trong yêu cầu
+    check = data.get('check', 0)  
 
-    # Chuyển đổi giá trị check từ 0/1 sang True/False
 
-    # Kiểm tra các trường có tồn tại không
     if username is None or man is None or ngot is None or cay is None:
         return jsonify({"message": "Thông tin không hợp lệ"}), 400
 
-    # Kiểm tra kiểu dữ liệu
     if not isinstance(man, int) or not isinstance(ngot, int) or not isinstance(cay, int):
         return jsonify({"message": "Các trường 'man', 'ngot', và 'cay' phải là số nguyên"}), 400
 
-    # Thực hiện việc lưu vào cơ sở dữ liệu
     new_food = Contact2(username=username, man=man, ngot=ngot, cay=cay, check=check)
     db.session.add(new_food)
     db.session.commit()
@@ -405,24 +378,21 @@ def delete_contact(user_id):
 
 @app.route('/login', methods=['POST'])
 def login():
-    data = request.get_json()  # Parses the JSON data from the request
+    data = request.get_json()  
     username = data.get('username')
     password = data.get('password')
-
+    print(username)
     if not username or password is None:
         return jsonify({"success": False, "message": "Username and password are required."}), 400
 
-    # Find the user by username
     user = Contact.query.filter_by(username=username).first()
 
     if user is None:
         return jsonify({"success": False, "message": "Invalid username or password."}), 401
 
-    # Replace check_password_hash with a simple comparison
-    if user.password != password:  # Replace this line with your logic
+    if user.password != password:  
         return jsonify({"success": False, "message": "Invalid username or password."}), 401
 
-    # If the password is correct
     session['user_id'] = user.id
     return jsonify({"success": True, "message": "Login successful", "user": user.to_json()})
 
@@ -442,5 +412,4 @@ def delete_contact_table():
     return jsonify({"message": "Contact table deleted successfully!"}), 200
 
 if __name__ == "__main__":
-    #schedule_tasks()  # Start scheduled tasks
     app.run(host="0.0.0.0", port=5000, debug=True)
