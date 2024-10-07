@@ -139,11 +139,11 @@ def xulydon(user_id):
 @app.route('/submit_feedback', methods=['POST'])
 def submit_feedback():
     data = request.get_json()
-    user_id = data.get('user_id')
+    userid = json.loads(data['user_id'])
     feedback = data.get('feedback')
 
     # Logic to save feedback to the database
-    contact = Contact.query.get(user_id)
+    contact = Contact.query.get(id = userid["id"])
     if contact:
         contact.feedback = feedback  # Save the feedback
         db.session.commit()
