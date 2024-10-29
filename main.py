@@ -1,4 +1,7 @@
 import os
+import pandas as pd
+from io import BytesIO
+from flask import send_file
 from sqlite3 import IntegrityError
 from flask import Flask, redirect, url_for, render_template, request, session, flash, jsonify,json
 from flask_sqlalchemy import SQLAlchemy
@@ -24,14 +27,15 @@ def xuly():
         print(f"Total contacts found: {len(contacts)}")
 
         for contact in contacts:
-            if contact.check == 0:
-                min_score = float('inf')
-                best_food = None
+           if contact.check != 1:
+            min_score = float('inf')
+            best_food = None
 
-                foods = Contact2.query.all()
-                print(f"Total foods found: {len(foods)}")
+            foods = Contact2.query.all()
+            print(f"Total foods found: {len(foods)}")
 
-                for food in foods:
+            for food in foods:
+                if food.check == 2:
                     score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
                     print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
 
@@ -39,11 +43,59 @@ def xuly():
                         min_score = score
                         best_food = food.username
                         print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
+                    if best_food:
+                        contact.favorite_food_t2 = best_food
+                        contact.check = 1 
+                        print(f"Updated contact {contact.username} with favorite food {best_food}")
+                if food.check == 3:
+                    score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
+                    print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
 
-                if best_food:
-                    contact.favorite_food = best_food
-                    print(f"Updated contact {contact.username} with favorite food {best_food}")
+                    if score < min_score:
+                        min_score = score
+                        best_food = food.username
+                        print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
+                    if best_food:
+                        contact.favorite_food_t3 = best_food
+                        contact.check = 1
+                        print(f"Updated contact {contact.username} with favorite food {best_food}")
+                if food.check == 4:
+                    score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
+                    print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
 
+                    if score < min_score:
+                        min_score = score
+                        best_food = food.username
+                        print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
+                    if best_food:
+                        contact.favorite_food_t4 = best_food
+                        contact.check = 1 
+                        print(f"Updated contact {contact.username} with favorite food {best_food}")
+                if food.check == 5:
+                    score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
+                    print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
+
+                    if score < min_score:
+                        min_score = score
+                        best_food = food.username
+                        print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
+                    if best_food:
+                        contact.favorite_food_t5 = best_food
+                        contact.check = 1 
+                        print(f"Updated contact {contact.username} with favorite food {best_food}")
+                if food.check == 6:
+                    score = abs(contact.man - food.man) + abs(contact.ngot - food.ngot) + abs(contact.cay - food.cay)
+                    print(f"Calculating score for contact {contact.username}: food {food.username} -> score: {score}")
+
+                    if score < min_score:
+                        min_score = score
+                        best_food = food.username
+                        print(f"New minimum score for contact {contact.username}: food {best_food} with score {min_score}")
+                    if best_food:
+                        contact.favorite_food_t6 = best_food
+                        contact.check = 1  
+                        print(f"Updated contact {contact.username} with favorite food {best_food}")
+                
         db.session.commit()
         print("All contacts updated successfully.")
 
@@ -289,7 +341,8 @@ def schedule_tasks():
     scheduler.add_job(func=xuly, trigger="cron", day_of_week='thu', hour=0, minute=0)
     scheduler.start()
     scheduler.add_job(func=reset_food, trigger="cron", day_of_week='sat', hour=0, minute=0)
-
+    scheduler.add_job(func=reset_contact, trigger="cron", day_of_week='sat', hour=0, minute=0)
+    
 def reset_food():
     try:
         foods = Contact2.query.all()
@@ -301,7 +354,67 @@ def reset_food():
     except Exception as e:
         db.session.rollback()
         print(f"An error occurred while resetting food: {e}")
+        
+def reset_contact():
+    try:
+        contact = Contact.query.all()
+        for user in contact:
+            user.check = 0
+        
+            db.session.commit()
+    
+    except Exception as e:
+        db.session.rollback()
+        print(f"An error occurred while resetting food: {e}")
 
+@app.route('/export_excel', methods=['GET'])
+def export_to_excel():
+    try:
+        # Lấy dữ liệu từ bảng Contact và Contact2
+        contacts = Contact.query.all()
+        contacts2 = Contact2.query.all()
+        
+        # Tạo danh sách từ dữ liệu của các bảng
+        contact_data = [{
+            'id': contact.id,
+            'username': contact.username,
+            'check': contact.check,
+            'man': contact.man,
+            'ngot': contact.ngot,
+            'cay': contact.cay,
+            'favorite Food T2': contact.favorite_food_t2,
+            'favorite Food T3': contact.favorite_food_t3,
+            'favorite Food T4': contact.favorite_food_t4,
+            'favorite Food T5': contact.favorite_food_t5,
+            'favorite Food T6': contact.favorite_food_t6
+        } for contact in contacts]
+
+        contact2_data = [{
+            'id': contact2.id,
+            'username': contact2.username,
+            'check': contact2.check,
+            'man': contact2.man,
+            'ngot': contact2.ngot,
+            'cay': contact2.cay
+        } for contact2 in contacts2]
+
+        # Chuyển đổi danh sách thành DataFrame
+        df_contact = pd.DataFrame(contact_data)
+        df_contact2 = pd.DataFrame(contact2_data)
+
+        # Tạo file Excel với nhiều sheet
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df_contact.to_excel(writer, sheet_name='Contact', index=False)
+            df_contact2.to_excel(writer, sheet_name='Contact2', index=False)
+        output.seek(0)
+
+        # Gửi file Excel về cho người dùng
+        return send_file(output, as_attachment=True, download_name="contacts_data.xlsx", mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+    except Exception as e:
+        return jsonify({"message": "An error occurred while exporting to Excel.", "error": str(e)}), 500
+    
 @app.route("/contacts", methods=["GET"])
 def get_contacts():
     try:
