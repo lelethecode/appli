@@ -27,11 +27,6 @@ def xuly():
         print(f"Total contacts found: {len(contacts)}")
 
         for contact in contacts:
-<<<<<<< HEAD
-           if contact.check != 1:
-            min_score = float('inf')
-            best_food = None
-=======
             if contact.check == 0:
                 min_score2 = float('inf')
                 min_score3 = float('inf')
@@ -43,7 +38,6 @@ def xuly():
                 best_food4 = None
                 best_food5 = None
                 best_food6 = None
->>>>>>> 32c4891dac88203f474ca2acd44777c8960bba84
 
             foods = Contact2.query.all()
             print(f"Total foods found: {len(foods)}")
