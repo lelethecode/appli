@@ -13,7 +13,7 @@ def create_app():
 
     # Configuration settings
     #app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydatatbase.db"
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'postgresql://leledatabase_zj8a_user:UhlqQO3FKIcYYbxnzfbR7CjA6KOkX94W@dpg-crrq63l6l47c73cmphm0-a.oregon-postgres.render.com/leledatabase_zj8a'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'postgresql://leledatabase_oq01_user:nhuEO8HYS0tXN6Ur59zrZbA6FwTRTnmj@dpg-csgfkvtds78s7382vib0-a.oregon-postgres.render.com/leledatabase_oq01'
     #gllglkTmoT3sZmkWp1HzboT2AsYXeW5a
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.secret_key = os.getenv('SECRET_KEY', 'lelethecoder')  # Set your secret key
