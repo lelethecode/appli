@@ -278,19 +278,19 @@ def choose_food():
             food = Contact.query.filter_by(id = userid["id"]).first()
             if food:
                 if food_id == 'monday':
-                    if check_value == 9: food.favorite_food_t2 = None
+                    if check_value == 0: food.favorite_food_t2 = check_value
                     food.favorite_food_t2 = check_value
                 if food_id == 'tuesday':
-                    if check_value == 9: food.favorite_food_t3 = None
+                    if check_value == 0: food.favorite_food_t3 = check_value
                     food.favorite_food_t3 = check_value
                 if food_id == 'wednesday':
-                    if check_value == 9: food.favorite_food_t4 = None
+                    if check_value == 0: food.favorite_food_t4 = check_value
                     food.favorite_food_t4 = check_value
                 if food_id == 'thursday':
-                    if check_value == 9: food.favorite_food_t5 = None
+                    if check_value == 0: food.favorite_food_t5 = check_value
                     food.favorite_food_t5 = check_value
                 if food_id == 'friday':
-                    if check_value == 9: food.favorite_food_t6 = None
+                    if check_value == 0: food.favorite_food_t6 = check_value
                     food.favorite_food_t6 = check_value
                 food.check = 1
 
