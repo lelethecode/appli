@@ -497,7 +497,7 @@ def create_contact():
 
     except Exception as e:
         db.session.rollback()
-        print(f"Unexpected error: {str(e)}")
+         print(f"IntegrityError: {e.orig}")  # This will show the original error
         return jsonify({"error": str(e)}), 500
 
 @app.route("/get_food_list", methods=["GET"])
