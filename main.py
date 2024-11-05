@@ -263,43 +263,36 @@ def choose_food_week():
 @app.route('/choose_food', methods=['POST'])
 def choose_food():
     data = request.get_json()
-    selected_foods = data['selected_foods'] 
+    selected_foods = data['selected_foods']
     userid = json.loads(data['user_id'])
-    print(userid)
+
     if not selected_foods:
         return jsonify({"message": "No food selected"}), 400
 
     try:
-       
-        
-        for food_id, check_value in selected_foods.items():
+        user = Contact.query.filter_by(id=userid["id"]).first()
+        if user:
+            for day, choice in selected_foods.items():
+                # Assign "no eat" (in Vietnamese, "khong_an") as appropriate
+                if day == 'monday':
+                    user.favorite_food_t2 = choice if choice != 'khong_an' else 'khong_an'
+                elif day == 'tuesday':
+                    user.favorite_food_t3 = choice if choice != 'khong_an' else 'khong_an'
+                elif day == 'wednesday':
+                    user.favorite_food_t4 = choice if choice != 'khong_an' else 'khong_an'
+                elif day == 'thursday':
+                    user.favorite_food_t5 = choice if choice != 'khong_an' else 'khong_an'
+                elif day == 'friday':
+                    user.favorite_food_t6 = choice if choice != 'khong_an' else 'khong_an'
+            
+            # Mark check to 1 to confirm the selection has been made
+            user.check = 1
+            db.session.commit()
 
-            print(userid["id"])
-            food = Contact.query.filter_by(id = userid["id"]).first()
-            if food:
-                if food_id == 'monday':
-                    if check_value == 0: food.favorite_food_t2 = check_value
-                    food.favorite_food_t2 = check_value
-                if food_id == 'tuesday':
-                    if check_value == 0: food.favorite_food_t3 = check_value
-                    food.favorite_food_t3 = check_value
-                if food_id == 'wednesday':
-                    if check_value == 0: food.favorite_food_t4 = check_value
-                    food.favorite_food_t4 = check_value
-                if food_id == 'thursday':
-                    if check_value == 0: food.favorite_food_t5 = check_value
-                    food.favorite_food_t5 = check_value
-                if food_id == 'friday':
-                    if check_value == 0: food.favorite_food_t6 = check_value
-                    food.favorite_food_t6 = check_value
-                food.check = 1
-
-        db.session.commit()
         return jsonify({"message": "Food selection updated successfully"}), 200
 
     except Exception as e:
-        #print(userid)
-        return jsonify({"message": "Failed to update food selection"}), 500
+        return jsonify({"message": "Failed to update food selection", "error": str(e)}), 500
 
     
 @app.route("/run_xuly", methods=["POST"])
