@@ -492,12 +492,11 @@ def create_contact():
         return jsonify({"message": "Contact created successfully."}), 201
     except IntegrityError as e:
         db.session.rollback()
-        print(f"IntegrityError: {e}")  
+        print(f"IntegrityError: {e.orig}")  # This will show the original error
         return jsonify({"error": "Username or email already exists."}), 400
-
     except Exception as e:
         db.session.rollback()
-         print(f"IntegrityError: {e.orig}")  # This will show the original error
+        print(f"Error: {str(e)}")  # Log the error message for debugging
         return jsonify({"error": str(e)}), 500
 
 @app.route("/get_food_list", methods=["GET"])
