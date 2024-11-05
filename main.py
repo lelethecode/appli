@@ -1,4 +1,5 @@
 import os
+import traceback
 import pandas as pd
 from io import BytesIO
 from flask import send_file
@@ -277,14 +278,19 @@ def choose_food():
             food = Contact.query.filter_by(id = userid["id"]).first()
             if food:
                 if food_id == 'monday':
+                    if check_value == 9: food.favorite_food_t2 = None
                     food.favorite_food_t2 = check_value
                 if food_id == 'tuesday':
+                    if check_value == 9: food.favorite_food_t3 = None
                     food.favorite_food_t3 = check_value
                 if food_id == 'wednesday':
+                    if check_value == 9: food.favorite_food_t4 = None
                     food.favorite_food_t4 = check_value
                 if food_id == 'thursday':
+                    if check_value == 9: food.favorite_food_t5 = None
                     food.favorite_food_t5 = check_value
                 if food_id == 'friday':
+                    if check_value == 9: food.favorite_food_t6 = None
                     food.favorite_food_t6 = check_value
                 food.check = 1
 
@@ -431,6 +437,7 @@ def export_to_excel():
         return send_file(output, as_attachment=True, download_name="contacts_data.xlsx", mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
     except Exception as e:
+        print("Error occurred:", traceback.format_exc())
         return jsonify({"message": "An error occurred while exporting to Excel.", "error": str(e)}), 500
     
 @app.route("/contacts", methods=["GET"])
