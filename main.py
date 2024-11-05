@@ -461,7 +461,7 @@ def create_contact():
     required_fields = ['username', 'password', 'email', 'man', 'ngot', 'cay']
     print(required_fields)
     for field in required_fields:
-        if field not in data or (not data[field] and data[field] != 0):
+        if field not in data or not data[field]:
             return jsonify({"error": f"{field} is required."}), 400
 
     for field in ['man', 'ngot', 'cay']:
@@ -497,6 +497,7 @@ def create_contact():
 
     except Exception as e:
         db.session.rollback()
+        print(f"Unexpected error: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 @app.route("/get_food_list", methods=["GET"])
