@@ -11,11 +11,13 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from sqlalchemy import text
 from model import Contact
 from model2 import Contact2
+from model3 import Contact3
 from datetime import timedelta
 from config import create_app, db  
 from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
 from werkzeug.security import check_password_hash
+import random
 app = create_app()
 
 @app.route("/")
@@ -384,6 +386,22 @@ def reset_contact():
         db.session.rollback()
         print(f"An error occurred while resetting food: {e}")
 
+@app.route('/api/random-food', methods=['GET'])
+def get_random_food():
+    # Lấy toàn bộ món ăn từ cơ sở dữ liệu
+    foods = Contact3.query.all()
+    # Chọn ngẫu nhiên một món ăn từ danh sách
+    random_food = random.choice(foods)
+    
+    # Chuyển dữ liệu món ăn thành JSON
+    food_data = {
+        "id": random_food.id,
+        "name": random_food.name,
+        "description": random_food.description,
+        "image_url": random_food.image_url,
+    }
+    return jsonify(food_data)
+
 @app.route('/export_excel', methods=['GET'])
 def export_to_excel():
     try:
@@ -500,6 +518,15 @@ def create_contact():
         print(f"Error: {str(e)}")  # Log the error message for debugging
         return jsonify({"error": str(e)}), 500
 
+@app.route("/food_list2", methods=["GET"])
+def food_list2():
+    try:
+        contacts = Contact3.query.all()
+        json_contacts = [contact.to_json() for contact in contacts]
+        return jsonify({"contacts": json_contacts})
+    except Exception as e:
+        return jsonify({"message": "An error occurred while fetching contacts.", "error": str(e)}), 500
+
 @app.route("/get_food_list", methods=["GET"])
 def get_food_list():
     try:
@@ -528,6 +555,31 @@ def create_food():
         return jsonify({"message": "Các trường 'man', 'ngot', và 'cay' phải là số nguyên"}), 400
 
     new_food = Contact2(username=username, man=man, ngot=ngot, cay=cay, check=check)
+    db.session.add(new_food)
+    db.session.commit()
+
+    return jsonify({"message": "Thêm món ăn thành công!"}), 201
+
+@app.route("/random_food", methods=["POST"])
+def random_food():
+    data = request.json
+
+    username = data.get('username')
+    man = data.get('man')
+    ngot = data.get('ngot')
+    cay = data.get('cay')
+    check = data.get('check', 0)
+    des = data.get('des')
+    ima = data.get('ima')
+
+
+    if username is None or man is None or ngot is None or cay is None:
+        return jsonify({"message": "Thông tin không hợp lệ"}), 400
+
+    if not isinstance(man, int) or not isinstance(ngot, int) or not isinstance(cay, int):
+        return jsonify({"message": "Các trường 'man', 'ngot', và 'cay' phải là số nguyên"}), 400
+
+    new_food = Contact3(username=username, man=man, ngot=ngot, cay=cay,des = des,ima = ima)
     db.session.add(new_food)
     db.session.commit()
 
