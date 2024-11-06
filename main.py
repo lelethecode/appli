@@ -403,7 +403,8 @@ def export_to_excel():
             'favorite Food T3': contact.favorite_food_t3,
             'favorite Food T4': contact.favorite_food_t4,
             'favorite Food T5': contact.favorite_food_t5,
-            'favorite Food T6': contact.favorite_food_t6
+            'favorite Food T6': contact.favorite_food_t6,
+            "feedback": contact.feedback
         } for contact in contacts]
 
         contact2_data = [{
