@@ -489,7 +489,7 @@ def create_contact():
 
     new_contact = Contact(
         username=data['username'],
-        clas = data['clas'];
+        clas = data['clas'],
         password=data['password'],
         email=data['email'],
         man=data['man'],
