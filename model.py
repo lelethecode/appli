@@ -5,6 +5,7 @@ class Contact(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     check = db.Column(db.Integer)
     username = db.Column(db.String(80), unique=True, nullable=False)
+    clas = db.Column(db.String(80), unique=False, nullable=False)
     password = db.Column(db.String(120), unique=False, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     man = db.Column(db.Integer)
@@ -22,6 +23,7 @@ class Contact(db.Model):
         return{
             "id": self.id,
             "username": self.username,
+            "clas": self.clas,
             "email":self.email,
             "man":self.man,
             "ngot":self.ngot,

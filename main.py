@@ -477,7 +477,7 @@ def get_food():
 def create_contact():
     data = request.get_json()
 
-    required_fields = ['username', 'password', 'email', 'man', 'ngot', 'cay']
+    required_fields = ['username','clas', 'password', 'email', 'man', 'ngot', 'cay']
     print(required_fields)
     for field in required_fields:
         if field not in data or not data[field]:
@@ -489,6 +489,7 @@ def create_contact():
 
     new_contact = Contact(
         username=data['username'],
+        clas = data['clas'];
         password=data['password'],
         email=data['email'],
         man=data['man'],
