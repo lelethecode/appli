@@ -413,6 +413,7 @@ def export_to_excel():
         contact_data = [{
             'id': contact.id,
             'username': contact.username,
+            'clas': contact.clas,
             'check': contact.check,
             'man': contact.man,
             'ngot': contact.ngot,
