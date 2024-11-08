@@ -653,4 +653,5 @@ def delete_contact_table():
     return jsonify({"message": "Contact table deleted successfully!"}), 200
 
 if __name__ == "__main__":
+    schedule_tasks()
     app.run(host="0.0.0.0", port=5000, debug=True)
