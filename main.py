@@ -438,7 +438,7 @@ def export_to_excel():
         # Chuyển đổi danh sách thành DataFrame
         df_contact = pd.DataFrame(contact_data)
         df_contact2 = pd.DataFrame(contact2_data)
-
+        df_contact = df_contact.sort_values(by='clas')
         # Tạo file Excel với nhiều sheet
         output = BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
